@@ -50,6 +50,13 @@ module WT
       kwargs[:aws_region] = aws_region == "" ? "us-east-1" : aws_region
 
       credentials = client.config.credentials
+
+      expiration = Time.now + 5.minutes
+      if credentials.respond_to?(:expiration)
+        expiration = credentials.expiration
+      end
+
+      kwargs[:expiration] = expiration
       credentials = credentials.credentials if credentials.respond_to?(:credentials)
       kwargs[:access_key_id] = credentials.access_key_id
       kwargs[:secret_access_key] = credentials.secret_access_key
@@ -77,7 +84,7 @@ module WT
     # @param access_key_id[String] The IAM access key ID
     # @param secret_access_key[String] The IAM secret access key
     # @param session_token[String,nil] The IAM session token if STS sessions are used
-    def initialize(now: Time.now, expires_in:, aws_region:, bucket_endpoint_url:, bucket_host:, bucket_name:, access_key_id:, secret_access_key:, session_token:)
+    def initialize(now: Time.now, expires_in:, aws_region:, bucket_endpoint_url:, bucket_host:, bucket_name:, access_key_id:, secret_access_key:, session_token:, expiration:)
       @region = aws_region
       @service = "s3"
 
@@ -89,6 +96,7 @@ module WT
       @secret_key = secret_access_key
       @access_key = access_key_id
       @session_token = session_token
+      @expiration = Time.now + 10.minutes
     end
 
     # Creates a signed URL for the given S3 object key.
