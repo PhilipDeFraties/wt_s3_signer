@@ -51,7 +51,7 @@ module WT
       kwargs[:aws_region] = aws_region == "" ? "us-east-1" : aws_region
       credentials = client.config.credentials
 
-      expiration = Time.now + 5.minutes
+      expiration = nil
       if credentials.respond_to?(:expiration)
         expiration = credentials.expiration
       end
