@@ -96,7 +96,7 @@ module WT
       @secret_key = secret_access_key
       @access_key = access_key_id
       @session_token = session_token
-      @expiration = Time.now + 10.minutes
+      @expiration = expiration
     end
 
     # Creates a signed URL for the given S3 object key.
