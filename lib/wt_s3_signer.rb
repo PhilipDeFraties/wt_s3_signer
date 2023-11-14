@@ -38,6 +38,7 @@ module WT
       kwargs[:bucket_host] = URI.parse(bucket.url).host
       kwargs[:bucket_name] = bucket.name
 
+      client = bucket.client
       resp = client.get_bucket_location(bucket: bucket.name)
       aws_region = resp.data.location_constraint
 
@@ -48,7 +49,6 @@ module WT
       # because if our region name is empty our signature will _not_
       # be accepted by S3 (but only for buckets in the us-east-1 region!)
       kwargs[:aws_region] = aws_region == "" ? "us-east-1" : aws_region
-
       credentials = client.config.credentials
 
       expiration = Time.now + 5.minutes
